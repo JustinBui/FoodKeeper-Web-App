@@ -4,15 +4,24 @@ This is a web app demonstration of our NLP models and approaches from our origin
  - Research paper: http://www.fullerton.edu/ecs/faculty/apanangadan/publications/IEEE_IRI_2022__entity_extraction.pdf
 
 
-### Setting Up Locally:
+### Setting Up Virtual Environment:
 ```
 python -m venv env
 env/Scripts/activate
+```
+
+### Install Packages in venv:
+```
 pip install spacy-streamlit
 python -m spacy download en_core_web_md
+pip install pandas
+pip install xlrd
+pip install numpy
+```
+
+### Running App Locally:
+```
 streamlit run main.py
 ```
 
 To deactivate virtual environment, run `deactivate`
-
-
