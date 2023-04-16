@@ -40,7 +40,20 @@ def main():
     menu = ['Home', 'NER']
     choice = st.sidebar.selectbox('Menu', menu)
 
+    page_bg_img = """
+    <style>
+        [data-testid = "stAppViewContainer"]{
+            background-image: url("https://coolbackgrounds.io/images/backgrounds/index/compute-ea4c57a4.png");
+            background-size: cover;
+            image-rendering: optimizeQuality;
+        }
+    </style>
+    """
 
+    st.markdown(page_bg_img,unsafe_allow_html=True)
+
+    
+    
     if choice == 'Home':
         st.title('This is a title')
         # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
@@ -54,7 +67,6 @@ def main():
             height=600,
             width=600
         )
-
     elif choice == 'NER':
         st.subheader('Named Entity Recognition: Foods')
         raw_text = st.text_area('Your Text', '')
