@@ -6,6 +6,7 @@ import re
 import spacy
 import spacy_streamlit
 from responses_functions import *
+from PIL import Image
 
 nlp = spacy.load('output/model-last')  # Our custom named entity recognition model
 
@@ -28,14 +29,14 @@ def preProcess(tweet):
 # ==================================================================
 
 def main():
-    st.title("FoodKeeper Named Research Project")
-
+    st.write('<h1 style="font-size: 40px;">FoodKeeper Named Research Project</h1>', unsafe_allow_html=True)
     menu = ['Home', 'NER']
     choice = st.sidebar.selectbox('Menu', menu)
 
+
     if choice == 'Home':
         st.title('This is a title')
-
+        st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
 
     elif choice == 'NER':
         st.subheader('Named Entity Recognition: Foods')
