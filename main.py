@@ -1,12 +1,13 @@
 # Core packages
 import streamlit as st
-
-# NLP packages
 import re
 import spacy
 import spacy_streamlit
 from responses_functions import *
+from streamlit_lottie import st_lottie
 from PIL import Image
+import json
+import requests
 
 nlp = spacy.load('output/model-last')  # Our custom named entity recognition model
 
@@ -28,6 +29,12 @@ def preProcess(tweet):
 
 # ==================================================================
 
+def load_lottieurl(url):
+    r = requests.get(url)
+    if r.status_code != 200: # Not ok
+        return None
+    return r.json()
+
 def main():
     st.write('<h1 style="font-size: 40px;">FoodKeeper Named Research Project</h1>', unsafe_allow_html=True)
     menu = ['Home', 'NER']
@@ -36,7 +43,17 @@ def main():
 
     if choice == 'Home':
         st.title('This is a title')
-        st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
+        # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
+
+        food_animation = load_lottieurl('https://assets1.lottiefiles.com/private_files/lf30_y0m027fl.json')
+        st_lottie(
+            food_animation,
+            speed=1,
+            reverse=False,
+            loop=True,
+            height=600,
+            width=600
+        )
 
     elif choice == 'NER':
         st.subheader('Named Entity Recognition: Foods')
