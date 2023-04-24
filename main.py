@@ -15,6 +15,21 @@ from responses_functions import *
 from food_item_info import *
 #from lottie import load_animation
 
+# page_bg_img = """
+# <style>
+#     [data-testid = "stAppViewContainer"]{
+#         background-image: url("https://coolbackgrounds.io/images/backgrounds/index/compute-ea4c57a4.png");
+#         background-size: cover;
+#         image-rendering: optimizeQuality;S
+#     }
+# </style>
+# """
+
+# st.markdown(page_bg_img,unsafe_allow_html=True)
+
+# with open('style.css') as f:
+#     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 
 # ============================ Global Variables ============================
 nlp = spacy.load('output/model-last')  # Our custom named entity recognition model
@@ -70,7 +85,6 @@ def main():
 
 
     if choice == 'Home':
-        
         # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
         food_animation = load_lottieurl('https://assets6.lottiefiles.com/temp/lf20_nXwOJj.json')
         st_lottie(
