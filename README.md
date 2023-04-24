@@ -17,6 +17,7 @@ python -m spacy download en_core_web_md
 pip install pandas
 pip install xlrd
 pip install numpy
+pip install streamlit-option-menu
 ```
 
 ### Running App Locally:
