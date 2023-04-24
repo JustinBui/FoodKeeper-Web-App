@@ -66,20 +66,6 @@ def main():
         orientation="horizontal"
     )
 
-    # page_bg_img = """
-    # <style>
-    #     [data-testid = "stAppViewContainer"]{
-    #         background-image: url("https://coolbackgrounds.io/images/backgrounds/index/compute-ea4c57a4.png");
-    #         background-size: cover;
-    #         image-rendering: optimizeQuality;
-    #     }
-    # </style>
-    # """
-
-
-    # st.markdown(page_bg_img,unsafe_allow_html=True)   
-
-
 
     if choice == 'Home':
         
@@ -97,7 +83,10 @@ def main():
         # animation = load_animation('Lottie Files/69733-food-beverage.json')
         # show_lottie_animation(animation, speed=1)
 
-        st.header('Overview:')
+        text = "Overview"
+        font = "Consolas"
+        font_size = "30px"
+        st.markdown(f"<span style='font-family:{font};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
         text = '''
             Welcome to our website where we shed light on the critical issue of food waste in the United States. 
@@ -112,12 +101,32 @@ def main():
         st.markdown(f"<p style='font-family:{font};font-size:{font_size}'>{text}", unsafe_allow_html=True)
         # st.markdown('Welcome to our website where we shed light on the critical issue of food waste in the United States. Did you know that approximately 30-40% of the food supply is wasted in the US, which amounts to about 133 billion pounds? Unfortunately, consumers also play a significant role in contributing to food waste. In fact, the average household wastes nearly 32% of the food it buys. One major reason for this waste is date label confusion, which leads to the premature disposal of food by 80% of Americans. At our website, we aim to raise awareness about food waste and provide helpful tips and resources to reduce it.')
         
-        st.header('How to Use:')
-        text2 = '''
+        
+        text = "How to Use"
+        font = "Consolas"
+        font_size = "30px"
+        st.markdown(f"<span style='font-family:{font};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+
+
+        text = '''
+        Discover the ultimate food preservation guide with our state-of-the-art NLP system! Simply input any food-related tweet and watch as our 
+        system identifies various food entities mentioned. For each entity detected, our system provides expert recommendations on how to store,
+        refrigerate, and freeze specific foods to keep them fresh and delicious for as long as possible. Whether you're a seasoned chef or a beginner 
+        cook, our NLP technology makes food preservation easier than ever before.
         '''
+        font = "Consolas"
+        font_size = "15px"
+        st.markdown(f"<p style='font-family:{font};font-size:{font_size}'>{text}", unsafe_allow_html=True)
 
     elif choice == 'NER':
-        st.subheader('Named Entity Recognition: Foods')
+        
+        text = "Named Entity Recognition: Foods"
+        font = "Consolas"
+        font_size = "25px"
+        st.markdown(f"<span style='font-family:{font};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+        
+        
+        #st.subheader('Named Entity Recognition: Foods')
         raw_text = st.text_area('Your Text', '')
 
         if st.button('View Results'):
