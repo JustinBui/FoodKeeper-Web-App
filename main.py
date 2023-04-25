@@ -15,6 +15,9 @@ from responses_functions import *
 from food_item_info import *
 
 
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True )
+
 # ============================ Global Variables ============================
 nlp = spacy.load('output/model-last')  # Our custom named entity recognition model
 FONT = "Consolas"
@@ -116,8 +119,33 @@ def main():
         option = st.selectbox('Try Out Our Prototype!',('Input Custom Text', 'Generate Tweet'))
         
         if option == 'Input Custom Text':
+
+            # st.markdown(
+            #     """
+            # <style>
+            # textarea::-webkit-scrollbar {
+            #     width: 10px;
+            # }
+            # textarea::-webkit-scrollbar-thumb {
+            #     background-color: #a3a3a3;
+            #     border-radius: 5px;
+            # }
+            # textarea {
+            #     border: 1px solid #ccc;
+            #     border-radius: 5px;
+            #     padding: 10px;
+            #     font-size: 16px;
+            #     resize: none;
+            #     width: 300px;
+            #     height: 150px;
+            # }
+            # </style>
+            # """,
+            #     unsafe_allow_html=True,
+            # )
+
             #st.subheader('Named Entity Recognition: Foods')
-            raw_text = st.text_area('Your Text', '')
+            raw_text = st.text_area('Your Text', placeholder="Enter a food related tweet", key="my_text_area")
             if st.button('View Results'):
                 preprocessed_message = preProcess(raw_text)
                 docx = nlp(preprocessed_message)

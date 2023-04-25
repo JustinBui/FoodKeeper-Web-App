@@ -1,4 +1,16 @@
-div.css-1r6slb0.e1tzin5v2 {
-    background-color: #EEEEEE;
-
+textarea::-webkit-scrollbar {
+    width: 10px;
+}
+textarea::-webkit-scrollbar-thumb {
+    background-color: #a3a3a3;
+    border-radius: 5px;
+}
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+    width: 300px;
+    height: 150px;
 }
