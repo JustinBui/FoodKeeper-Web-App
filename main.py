@@ -56,6 +56,7 @@ def show_chat_message(input_msg, document):
 
     types = ['Pantry', 'Refrigerate', 'Freeze']
     if len(document.ents) == 0:
+        print('No entities found')
         st.session_state.generated.append('Sorry, no food entities were found in this message!')
     else:
         for e in document.ents:
@@ -75,17 +76,17 @@ def show_chat_message(input_msg, document):
             
             st.session_state.generated.append(response_msg)
         
-        text = "Responses:"
-        font_size = "25px"
-        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+    text = "Responses:"
+    font_size = "25px"
+    st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
-        # Printing messages
-        if st.session_state.past:
-            for i in range(0, len(st.session_state['past'])):
-                streamlit_chat.message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+    # Printing messages
+    if st.session_state.past:
+        for i in range(0, len(st.session_state['past'])):
+            streamlit_chat.message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
-                for j in range(len(st.session_state['generated'])):
-                    streamlit_chat.message(st.session_state["generated"][j], key=str(i+j))
+            for j in range(len(st.session_state['generated'])):
+                streamlit_chat.message(st.session_state["generated"][j], key=str(i+j))
 
 
 
@@ -112,31 +113,31 @@ def main():
         font_size = "25px"
         st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
+        option = st.selectbox('Try Out Our Prototype!',('Input Custom Text', 'Generate Tweet'))
         
-        #st.subheader('Named Entity Recognition: Foods')
-        raw_text = st.text_area('Your Text', '')
-        message = ''
+        if option == 'Input Custom Text':
+            #st.subheader('Named Entity Recognition: Foods')
+            raw_text = st.text_area('Your Text', '')
+            if st.button('View Results'):
+                preprocessed_message = preProcess(raw_text)
+                docx = nlp(preprocessed_message)
+                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+                show_chat_message(raw_text, docx)
 
-        if st.button("Random food tweet"):
-            with open('test_data.csv', newline='') as file:
-                reader = csv.reader(file)
-                data = list(reader)
-                message = random.choice(data)[0]
+        elif option == 'Generate Tweet':
+            if st.button("Random food tweet"):
+                with open('test_data.csv', newline='') as file:
+                    reader = csv.reader(file)
+                    data = list(reader)
+                    random_tweet = random.choice(data)[0]
+
+                preprocessed_message = preProcess(random_tweet)
+                docx = nlp(preprocessed_message)
+                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+                show_chat_message(random_tweet, docx)
                 
-        elif st.button('View Results'):
-            message = raw_text
 
-
-        preprocessed_message = preProcess(message)
-        docx = nlp(preprocessed_message)
         
-
-        spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-        print('Entities Found: ' + str(docx.ents))
-
-        # ------------ Generating responses, if it is relevant to food ------------
-
-        show_chat_message(message, docx)
        
 
 
