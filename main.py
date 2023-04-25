@@ -9,7 +9,8 @@ from streamlit_option_menu import option_menu
 import spacy
 import re
 import requests
-
+import csv
+import random 
 
 from responses_functions import *
 from food_item_info import *
@@ -17,12 +18,12 @@ from food_item_info import *
 
 # page_bg_img = """
 # <style>
-#     [data-testid = "stAppViewContainer"]{
+#      [data-testid = "stAppViewContainer"]{  
 #         background-image: url("https://coolbackgrounds.io/images/backgrounds/index/compute-ea4c57a4.png");
 #         background-size: cover;
 #         image-rendering: optimizeQuality;S
-#     }
-# </style>
+#      }
+#  </style>
 # """
 
 # st.markdown(page_bg_img,unsafe_allow_html=True)
@@ -139,8 +140,35 @@ def main():
         
         #st.subheader('Named Entity Recognition: Foods')
         raw_text = st.text_area('Your Text', '')
+        
+        if st.button("Random food tweet"):
+            with open('test_data.csv', newline='') as file:
+                reader = csv.reader(file)
+                data = list(reader)
+                random_tweet = random.choice(data)[0]
+                st.header(random_tweet)
+                docx = nlp(preProcess(random_tweet))
+                types = ['Pantry', 'Refrigerate', 'Freeze']
 
-        if st.button('View Results'):
+                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+                print('Entities Found: ' + str(docx.ents))
+
+
+                text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
+                font_size = "25px"
+                st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+                for e in docx.ents:
+                    item = e.text
+                    st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
+
+                    if entityFound(item):
+                        for t in types:
+                            tips = foodStorage(item, t)
+                            st.markdown(f"**{t}**: {str(tips)}")
+                
+            
+
+        elif st.button('View Results'):
             docx = nlp(raw_text)
             types = ['Pantry', 'Refrigerate', 'Freeze']
 
