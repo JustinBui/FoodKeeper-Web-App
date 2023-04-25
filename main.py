@@ -73,19 +73,76 @@ def main():
     font_size = "42px"
     st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
-    menu_options = ['Home', 'NER']
+    menu_options = ['NER', 'Home']
     # choice = st.sidebar.selectbox('Menu', menu_options)
 
     choice = option_menu(
         menu_title=None,
         options=menu_options,
         default_index=0,
-        icons=["house", "book"],
+        icons=["chat", "house"],
         orientation="horizontal"
     )
 
 
-    if choice == 'Home':
+    if choice == 'NER':
+        text = "Named Entity Recognition: Foods"
+        font_size = "25px"
+        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+        
+        
+        #st.subheader('Named Entity Recognition: Foods')
+        raw_text = st.text_area('Your Text', '')
+        
+        if st.button("Random food tweet"):
+            with open('test_data.csv', newline='') as file:
+                reader = csv.reader(file)
+                data = list(reader)
+                random_tweet = random.choice(data)[0]
+                st.header(random_tweet)
+                docx = nlp(preProcess(random_tweet))
+                types = ['Pantry', 'Refrigerate', 'Freeze']
+
+                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+                print('Entities Found: ' + str(docx.ents))
+
+
+                text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
+                font_size = "25px"
+                st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+                for e in docx.ents:
+                    item = e.text
+                    st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
+
+                    if entityFound(item):
+                        for t in types:
+                            tips = foodStorage(item, t)
+                            st.markdown(f"**{t}**: {str(tips)}")
+        elif st.button('View Results'):
+            docx = nlp(raw_text)
+            types = ['Pantry', 'Refrigerate', 'Freeze']
+
+            spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+            print('Entities Found: ' + str(docx.ents))
+
+            # ------------ Generating responses, if it is relevant to food ------------
+            message = raw_text
+            preprocessed_message = preProcess(message)
+
+            text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
+            font_size = "25px"
+            st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+            for e in docx.ents:
+                item = e.text
+                st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
+
+                if entityFound(item):
+                    for t in types:
+                        tips = foodStorage(item, t)
+                        st.markdown(f"**{t}**: {str(tips)}")
+
+
+    elif choice == 'Home':
         # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
         food_animation = load_lottieurl('https://assets6.lottiefiles.com/temp/lf20_nXwOJj.json')
         st_lottie(
@@ -130,67 +187,6 @@ def main():
         '''
         font_size = "15px"
         st.markdown(f"<p style='font-family:{FONT};font-size:{font_size}'>{text}", unsafe_allow_html=True)
-
-    elif choice == 'NER':
-        
-        text = "Named Entity Recognition: Foods"
-        font_size = "25px"
-        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-        
-        
-        #st.subheader('Named Entity Recognition: Foods')
-        raw_text = st.text_area('Your Text', '')
-        
-        if st.button("Random food tweet"):
-            with open('test_data.csv', newline='') as file:
-                reader = csv.reader(file)
-                data = list(reader)
-                random_tweet = random.choice(data)[0]
-                st.header(random_tweet)
-                docx = nlp(preProcess(random_tweet))
-                types = ['Pantry', 'Refrigerate', 'Freeze']
-
-                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-                print('Entities Found: ' + str(docx.ents))
-
-
-                text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
-                font_size = "25px"
-                st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-                for e in docx.ents:
-                    item = e.text
-                    st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
-
-                    if entityFound(item):
-                        for t in types:
-                            tips = foodStorage(item, t)
-                            st.markdown(f"**{t}**: {str(tips)}")
-                
-            
-
-        elif st.button('View Results'):
-            docx = nlp(raw_text)
-            types = ['Pantry', 'Refrigerate', 'Freeze']
-
-            spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-            print('Entities Found: ' + str(docx.ents))
-
-            # ------------ Generating responses, if it is relevant to food ------------
-            message = raw_text
-            preprocessed_message = preProcess(message)
-
-            text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
-            font_size = "25px"
-            st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-            for e in docx.ents:
-                item = e.text
-                st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
-
-                if entityFound(item):
-                    for t in types:
-                        tips = foodStorage(item, t)
-                        st.markdown(f"**{t}**: {str(tips)}")
-
 
 
 if __name__ == '__main__':
