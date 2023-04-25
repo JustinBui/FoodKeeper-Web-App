@@ -3,8 +3,7 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 import spacy_streamlit
 from streamlit_option_menu import option_menu
-
-
+import streamlit_chat
 
 import spacy
 import re
@@ -14,22 +13,6 @@ import random
 
 from responses_functions import *
 from food_item_info import *
-#from lottie import load_animation
-
-# page_bg_img = """
-# <style>
-#      [data-testid = "stAppViewContainer"]{  
-#         background-image: url("https://coolbackgrounds.io/images/backgrounds/index/compute-ea4c57a4.png");
-#         background-size: cover;
-#         image-rendering: optimizeQuality;S
-#      }
-#  </style>
-# """
-
-# st.markdown(page_bg_img,unsafe_allow_html=True)
-
-# with open('style.css') as f:
-#     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 
 # ============================ Global Variables ============================
@@ -67,6 +50,45 @@ def load_lottiefile(path: str):
         return None
     return r.json()
 
+def show_chat_message(input_msg, document):
+    st.session_state.generated, st.session_state.past  = [], [] # Clear chatbot results to brand new
+    st.session_state.past.append(input_msg)
+
+    types = ['Pantry', 'Refrigerate', 'Freeze']
+    if len(document.ents) == 0:
+        st.session_state.generated.append('Sorry, no food entities were found in this message!')
+    else:
+        for e in document.ents:
+            item = e.text
+            response_msg = f'----- TIPS FOR {item.upper()} -----\n'
+
+            if entityFound(item): # If the food entity is found in our current dataset (FoodKeeper)
+                for t in types:
+                    tips = foodStorage(item, t)
+                    response_msg += t + ': '
+
+                    for sent in tips:
+                        response_msg += sent + ' '
+                    response_msg += '\n\n' if t != 'Freeze' else ''
+            else:
+                response_msg += 'Sorry, no tips can be found here!'
+            
+            st.session_state.generated.append(response_msg)
+        
+        text = "Responses:"
+        font_size = "25px"
+        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+
+        # Printing messages
+        if st.session_state.past:
+            for i in range(0, len(st.session_state['past'])):
+                streamlit_chat.message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+
+                for j in range(len(st.session_state['generated'])):
+                    streamlit_chat.message(st.session_state["generated"][j], key=str(i+j))
+
+
+
 def main():
     #st.write('<h1 style="font-size: 40px;">FoodKeeper Named Research Project</h1>', unsafe_allow_html=True)
     text = "FoodKeeper Research Project"
@@ -89,57 +111,33 @@ def main():
         text = "Named Entity Recognition: Foods"
         font_size = "25px"
         st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-        
+
         
         #st.subheader('Named Entity Recognition: Foods')
         raw_text = st.text_area('Your Text', '')
-        
+        message = ''
+
         if st.button("Random food tweet"):
             with open('test_data.csv', newline='') as file:
                 reader = csv.reader(file)
                 data = list(reader)
-                random_tweet = random.choice(data)[0]
-                st.header(random_tweet)
-                docx = nlp(preProcess(random_tweet))
-                types = ['Pantry', 'Refrigerate', 'Freeze']
-
-                spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-                print('Entities Found: ' + str(docx.ents))
-
-
-                text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
-                font_size = "25px"
-                st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-                for e in docx.ents:
-                    item = e.text
-                    st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
-
-                    if entityFound(item):
-                        for t in types:
-                            tips = foodStorage(item, t)
-                            st.markdown(f"**{t}**: {str(tips)}")
+                message = random.choice(data)[0]
+                
         elif st.button('View Results'):
-            docx = nlp(raw_text)
-            types = ['Pantry', 'Refrigerate', 'Freeze']
-
-            spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-            print('Entities Found: ' + str(docx.ents))
-
-            # ------------ Generating responses, if it is relevant to food ------------
             message = raw_text
-            preprocessed_message = preProcess(message)
 
-            text = "Here are some Pantry, Refrigerate, and Freezing tips according to the U.S. Department of Food Safety and Inspection:"
-            font_size = "25px"
-            st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
-            for e in docx.ents:
-                item = e.text
-                st.markdown(f"<h4>{item}</h4>", unsafe_allow_html=True)
 
-                if entityFound(item):
-                    for t in types:
-                        tips = foodStorage(item, t)
-                        st.markdown(f"**{t}**: {str(tips)}")
+        preprocessed_message = preProcess(message)
+        docx = nlp(preprocessed_message)
+        
+
+        spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
+        print('Entities Found: ' + str(docx.ents))
+
+        # ------------ Generating responses, if it is relevant to food ------------
+
+        show_chat_message(message, docx)
+       
 
 
     elif choice == 'Home':
