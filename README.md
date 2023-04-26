@@ -18,6 +18,9 @@ pip install pandas
 pip install xlrd
 pip install numpy
 pip install streamlit-option-menu
+pip install streamlit-lottie
+pip install streamlit-chat
+pip install nltk
 ```
 
 ### Running App Locally:
