@@ -186,7 +186,7 @@ def main():
 
         text = "Overview"
         font_size = "30px"
-        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='font-family:{FONT};font-weight:bold;font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
         text = '''
             Welcome to our website where we shed light on the critical issue of food waste in the United States. 
@@ -196,14 +196,22 @@ def main():
             80% of Americans. At our website, we aim to raise awareness about food waste and provide helpful tips and resources to reduce it.
 
         '''
+
+        box_style = """
+            background-color:#0066b2;
+            border-radius: 10px;
+            padding: 10px;
+        """
         font_size = "15px"
-        st.markdown(f"<p style='font-family:{FONT};font-size:{font_size}'>{text}", unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}">'
+            f"<p style='font-family:{FONT};font-size:{font_size}'>{text}"
+            f'', unsafe_allow_html=True)
         # st.markdown('Welcome to our website where we shed light on the critical issue of food waste in the United States. Did you know that approximately 30-40% of the food supply is wasted in the US, which amounts to about 133 billion pounds? Unfortunately, consumers also play a significant role in contributing to food waste. In fact, the average household wastes nearly 32% of the food it buys. One major reason for this waste is date label confusion, which leads to the premature disposal of food by 80% of Americans. At our website, we aim to raise awareness about food waste and provide helpful tips and resources to reduce it.')
         
         
         text = "How to Use"
         font_size = "30px"
-        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='font-family:{FONT};font-weight:bold;font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
 
 
         text = '''
@@ -212,9 +220,15 @@ def main():
         refrigerate, and freeze specific foods to keep them fresh and delicious for as long as possible. Whether you're a seasoned chef or a beginner 
         cook, our NLP technology makes food preservation easier than ever before.
         '''
+        box_style = """
+            background-color:#0066b2;
+            border-radius: 10px;
+            padding: 10px;
+        """
         font_size = "15px"
-        st.markdown(f"<p style='font-family:{FONT};font-size:{font_size}'>{text}", unsafe_allow_html=True)
-
+        st.markdown(f'<div style="{box_style}">'
+            f"<p style='font-family:{FONT};font-size:{font_size}'>{text}"
+            f'', unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
