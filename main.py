@@ -198,7 +198,7 @@ def main():
         '''
 
         box_style = """
-            background-color:#0066b2;
+            background-color:#4C516D;
             border-radius: 10px;
             padding: 10px;
         """
@@ -221,7 +221,7 @@ def main():
         cook, our NLP technology makes food preservation easier than ever before.
         '''
         box_style = """
-            background-color:#0066b2;
+            background-color:#4C516D;
             border-radius: 10px;
             padding: 10px;
         """
