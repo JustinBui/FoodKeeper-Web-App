@@ -179,7 +179,10 @@ def main():
             loop=True,
             height=450,
             width=450,
+            #newXPosition = 200;
+
         )
+     
 
         # animation = load_animation('Lottie Files/69733-food-beverage.json')
         # show_lottie_animation(animation, speed=1)
