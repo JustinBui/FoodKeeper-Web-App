@@ -165,23 +165,43 @@ def main():
                 show_chat_message(random_tweet, docx)
                 
 
-        
+    
        
 
-
-    elif choice == 'Home':
+    
+    elif choice == 'Home':  
+        def include_css():
+            st.markdown(
+                """
+                <style>
+                    .container {
+                        display: flex;
+                        justify-content: center;
+                    }
+        
+                    .center-lottie {
+                        display: inline-block;
+                    }
+                </style>
+                """,
+                unsafe_allow_html=True,
+        )
+        include_css()
+        
         # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
         food_animation = load_lottieurl('https://assets6.lottiefiles.com/temp/lf20_nXwOJj.json')
+        st.markdown('<div class="container">', unsafe_allow_html=True)
         st_lottie(
             food_animation,
             speed=2,
             reverse=False,
             loop=True,
-            height=450,
-            width=450,
-            #newXPosition = 200;
-
+            height=455,
+            width=704,
+            
         )
+        st.markdown('</div>', unsafe_allow_html=True)
+
      
 
         # animation = load_animation('Lottie Files/69733-food-beverage.json')
