@@ -120,6 +120,8 @@ def main():
         
         if option == 'Input Custom Text':
 
+            
+            #image integration
             # st.markdown(
             #     """
             # <style>
