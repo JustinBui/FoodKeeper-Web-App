@@ -96,8 +96,10 @@ def show_chat_message(input_msg, document):
 def main():
     #st.write('<h1 style="font-size: 40px;">FoodKeeper Named Research Project</h1>', unsafe_allow_html=True)
     text = "FoodKeeper Research Project"
+    # Render the markdown string as HTML using the st.markdown method
     font_size = "42px"
     st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+    
 
     menu_options = ['NER', 'Home']
     # choice = st.sidebar.selectbox('Menu', menu_options)
@@ -148,14 +150,14 @@ def main():
 
             #st.subheader('Named Entity Recognition: Foods')
             raw_text = st.text_area('Your Text', placeholder="Enter a food related tweet", key="my_text_area")
-            if st.button('View Results'):
+            if st.button('View Results', type="primary"):
                 preprocessed_message = preProcess(raw_text)
                 docx = nlp(preprocessed_message)
                 spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
                 show_chat_message(raw_text, docx)
 
         elif option == 'Generate Tweet':
-            if st.button("Random food tweet"):
+            if st.button("Random food tweet",type="primary" ):
                 with open('test_data.csv', newline='') as file:
                     reader = csv.reader(file)
                     data = list(reader)
