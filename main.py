@@ -116,7 +116,9 @@ def main():
     if choice == 'NER':
         text = "Named Entity Recognition: Foods"
         font_size = "25px"
-        st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
+        markdown_text = f"<span style='font-family:{FONT};font-size:{font_size}'><u>{text}</u></span>"
+        st.markdown(markdown_text, unsafe_allow_html=True)
+
 
         option = st.selectbox('Try Out Our Prototype!',('Input Custom Text', 'Generate Tweet'))
         
