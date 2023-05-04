@@ -48,8 +48,20 @@ def get_cooking_similarity(context_words: list):
     if len(context_words) == 0: # Empty list
         return {'': 0}
     
-    cooking_keywords = ["cook", "cooking", "recipe", "ingredient"]
-    # cooking_keywords = ["cook", "cooking", "cooked"]
+    cooking_keywords = ["cook", 
+                        "recipe", 
+                        "ingredient", 
+                        "leftovers", 
+                        "boiled", 
+                        "fried", 
+                        "baked", 
+                        "expired", 
+                        "spoiled", 
+                        "pantry", 
+                        "refrigerate", 
+                        "freeze",
+                        "storage"]
+    
     nlp_word_sim = spacy.load('en_core_web_md') # Another spacy nlp model for word similarity
     
     similarity_scores = dict()
@@ -70,7 +82,7 @@ def get_cooking_similarity(context_words: list):
     
     return similarity_scores
 
-def is_related_to_cooking(similarity_scores, threshold):
+def is_relevant_context(similarity_scores, threshold):
     highest_corr_word = max(similarity_scores, key=similarity_scores.get)
     highest_score = similarity_scores[highest_corr_word]
     print(f'Highest correlated word \'{highest_corr_word}\': {highest_score} similarity rate')
@@ -79,3 +91,29 @@ def is_related_to_cooking(similarity_scores, threshold):
         return True
     else:
         return False
+
+
+def generate_response(tweet, entities, thresh_value):
+    if len(entities) == 0:
+        print('No tips to give!')
+    else:
+        types = ['Pantry', 'Refrigerate', 'Freeze']
+        ents_str = [e.text for e in entities] # Convert tuple of <class 'spacy.tokens.span.Span'> to list of entity strings
+
+        # Retrieving words surrounding each entity
+        filtered_words = get_surrounding_words(tweet, ents_str)
+
+        # Retrieving Similarity Scores (SpaCy)
+        similarity_scores = get_cooking_similarity(filtered_words)
+
+        # Identify if our sentence (Based on context is related to cooking)
+        if is_relevant_context(similarity_scores, threshold=thresh_value):
+            for e in entities:
+                item = repr(e)
+                print(item)
+                if entityFound(item):
+                    for t in types:
+                        print(foodStorage(item, t))
+                else: print('Entity not found in our dataset!')
+        else:
+            print('Context of this sentence is not relevant to give a tip')

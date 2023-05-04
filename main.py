@@ -57,28 +57,43 @@ def show_chat_message(input_msg, document):
     st.session_state.generated, st.session_state.past  = [], [] # Clear chatbot results to brand new
     st.session_state.past.append(input_msg)
 
-    types = ['Pantry', 'Refrigerate', 'Freeze']
-    if len(document.ents) == 0:
+    entities = document.ents
+
+    if len(entities) == 0: # Food entities not found
         print('No entities found')
-        st.session_state.generated.append('Sorry, no food entities were found in this message!')
-    else:
-        for e in document.ents:
-            item = e.text
-            response_msg = f'----- TIPS FOR {item.upper()} -----\n'
-
-            if entityFound(item): # If the food entity is found in our current dataset (FoodKeeper)
-                for t in types:
-                    tips = foodStorage(item, t)
-                    response_msg += t + ': '
-
-                    for sent in tips:
-                        response_msg += sent + ' '
-                    response_msg += '\n\n' if t != 'Freeze' else ''
-            else:
-                response_msg += 'Sorry, no tips can be found here!'
-            
-            st.session_state.generated.append(response_msg)
+        st.session_state.generated.append('Sorry, no food entities were found in this message! ¯\_(ツ)_/¯')
+    else: # Food entiites found
         
+        types = ['Pantry', 'Refrigerate', 'Freeze']
+
+        ents_str = [e.text for e in entities] # Convert tuple of <class 'spacy.tokens.span.Span'> to list of entity strings
+
+        # Retrieving words surrounding each entity
+        filtered_words = get_surrounding_words(input_msg, ents_str)
+
+        # Retrieving Similarity Scores (SpaCy)
+        similarity_scores = get_cooking_similarity(filtered_words)
+
+        if is_relevant_context(similarity_scores, threshold=0.65):
+            for e in entities:
+                item = e.text
+                response_msg = f'----- TIPS FOR {item.upper()} -----\n'
+
+                if entityFound(item): # If the food entity is found in our current dataset (FoodKeeper)
+                    for t in types:
+                        tips = foodStorage(item, t)
+                        response_msg += t + ': '
+
+                        for sent in tips:
+                            response_msg += sent + ' '
+                        response_msg += '\n\n' if t != 'Freeze' else ''
+                else:
+                    response_msg += 'Sorry, no tips can be found here!'
+                
+                st.session_state.generated.append(response_msg)
+        else:
+            st.session_state.generated.append('Sorry, the context of this sentence is not relevant to the subject matter!')
+
     text = "Responses:"
     font_size = "25px"
     st.markdown(f"<span style='font-family:{FONT};font-size:{font_size}'>{text}</span>", unsafe_allow_html=True)
@@ -123,37 +138,11 @@ def main():
         option = st.selectbox('Try Out Our Prototype!',('Input Custom Text', 'Generate Tweet'))
         
         if option == 'Input Custom Text':
-
-            
-            #image integration
-            # st.markdown(
-            #     """
-            # <style>
-            # textarea::-webkit-scrollbar {
-            #     width: 10px;
-            # }
-            # textarea::-webkit-scrollbar-thumb {
-            #     background-color: #a3a3a3;
-            #     border-radius: 5px;
-            # }
-            # textarea {
-            #     border: 1px solid #ccc;
-            #     border-radius: 5px;
-            #     padding: 10px;
-            #     font-size: 16px;
-            #     resize: none;
-            #     width: 300px;
-            #     height: 150px;
-            # }
-            # </style>
-            # """,
-            #     unsafe_allow_html=True,
-            # )
-
             #st.subheader('Named Entity Recognition: Foods')
             raw_text = st.text_area('Your Text', placeholder="Enter a food related tweet", key="my_text_area")
             if st.button('View Results', type="primary"):
                 preprocessed_message = preProcess(raw_text)
+                print(preprocessed_message)
                 docx = nlp(preprocessed_message)
                 spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
                 show_chat_message(raw_text, docx)
