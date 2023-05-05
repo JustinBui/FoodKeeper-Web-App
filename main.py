@@ -109,7 +109,6 @@ def show_chat_message(input_msg, document):
 
 
 def main():
-    #st.write('<h1 style="font-size: 40px;">FoodKeeper Named Research Project</h1>', unsafe_allow_html=True)
     text = "FoodKeeper Research Project"
     # Render the markdown string as HTML using the st.markdown method
     font_size = "42px"
@@ -183,7 +182,6 @@ def main():
         )
         include_css()
         
-        # st.image("animatedfood.gif", caption="Animated GIF", use_column_width=True)
         food_animation = load_lottieurl('https://assets6.lottiefiles.com/temp/lf20_nXwOJj.json')
         st.markdown('<div class="container">', unsafe_allow_html=True)
         st_lottie(
@@ -197,10 +195,6 @@ def main():
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-     
-
-        # animation = load_animation('Lottie Files/69733-food-beverage.json')
-        # show_lottie_animation(animation, speed=1)
 
         text = "Overview"
         font_size = "30px"
@@ -224,7 +218,6 @@ def main():
         st.markdown(f'<div style="{box_style}">'
             f"<p style='font-family:{FONT};font-size:{font_size}'>{text}"
             f'', unsafe_allow_html=True)
-        # st.markdown('Welcome to our website where we shed light on the critical issue of food waste in the United States. Did you know that approximately 30-40% of the food supply is wasted in the US, which amounts to about 133 billion pounds? Unfortunately, consumers also play a significant role in contributing to food waste. In fact, the average household wastes nearly 32% of the food it buys. One major reason for this waste is date label confusion, which leads to the premature disposal of food by 80% of Americans. At our website, we aim to raise awareness about food waste and provide helpful tips and resources to reduce it.')
         
         
         text = "How to Use"
