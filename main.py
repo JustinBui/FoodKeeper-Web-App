@@ -74,7 +74,7 @@ def show_chat_message(input_msg, document):
         # Retrieving Similarity Scores (SpaCy)
         similarity_scores = get_cooking_similarity(filtered_words)
 
-        if is_relevant_context(similarity_scores, threshold=0.65):
+        if is_relevant_context(similarity_scores, threshold=0.5):
             for e in entities:
                 item = e.text
                 response_msg = f'----- TIPS FOR {item.upper()} -----\n'

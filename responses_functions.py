@@ -52,6 +52,7 @@ def get_cooking_similarity(context_words: list):
                         "recipe", 
                         "ingredient", 
                         "leftovers", 
+                        "leftover"
                         "boiled", 
                         "fried", 
                         "baked", 
