@@ -6,7 +6,6 @@ from streamlit_option_menu import option_menu
 import streamlit_chat
 
 import spacy
-import re
 import requests
 import csv
 import random 
@@ -21,21 +20,6 @@ with open('style.css') as f:
 # ============================ Global Variables ============================
 nlp = spacy.load('output/model-last')  # Our custom named entity recognition model
 FONT = "Consolas"
-
-
-# ====================== NLP Functionalities ======================
-def preProcess(tweet):
-    #Converts a tweet to lowercase, replaces anyusername w/ <USERNAME> and URLS with <URL>
-    tweet = tweet.lower()
-    tweet = re.sub('@[a-zA-z0-9]*', '', tweet)              # <USERNAME>
-    tweet = re.sub('http[a-zA-z0-9./:]*', '', tweet)       # <URL>
-    tweet = re.sub('[.,-]*', '', tweet)
-
-    # Utilize for instragram posts, remove hashtag for food-related posts
-    tweet = re.sub(r'#', '', tweet)
-    tweet = re.sub('&amp;', 'and', tweet)
-    #print(tweet)
-    return tweet
 
 # ==================================================================
 
@@ -53,9 +37,9 @@ def load_lottiefile(path: str):
         return None
     return r.json()
 
-def show_chat_message(input_msg, document):
+def show_chat_message(raw_input_msg, preprocessed_input_msg, document):
     st.session_state.generated, st.session_state.past  = [], [] # Clear chatbot results to brand new
-    st.session_state.past.append(input_msg)
+    st.session_state.past.append(raw_input_msg)
 
     entities = document.ents
 
@@ -69,7 +53,8 @@ def show_chat_message(input_msg, document):
         ents_str = [e.text for e in entities] # Convert tuple of <class 'spacy.tokens.span.Span'> to list of entity strings
 
         # Retrieving words surrounding each entity
-        filtered_words = get_surrounding_words(input_msg, ents_str)
+        filtered_words = get_surrounding_words(preprocessed_input_msg, ents_str)
+
 
         # Retrieving Similarity Scores (SpaCy)
         similarity_scores = get_cooking_similarity(filtered_words)
@@ -144,7 +129,7 @@ def main():
                 print(preprocessed_message)
                 docx = nlp(preprocessed_message)
                 spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-                show_chat_message(raw_text, docx)
+                show_chat_message(raw_text, preprocessed_message, docx)
 
         elif option == 'Generate Tweet':
             if st.button("Random food tweet",type="primary" ):
@@ -156,13 +141,7 @@ def main():
                 preprocessed_message = preProcess(random_tweet)
                 docx = nlp(preprocessed_message)
                 spacy_streamlit.visualize_ner(docx, labels=nlp.get_pipe("ner").labels,)
-                show_chat_message(random_tweet, docx)
-                
-
-    
-       
-
-    
+                show_chat_message(random_tweet, preprocessed_message, docx)
     elif choice == 'Home':  
         def include_css():
             st.markdown(

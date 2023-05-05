@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 storageInfo = {
     "Pantry": [
@@ -130,3 +131,18 @@ def foodStorage(foodName, information):
     
         if tempString != '': all_info.append(tempString)                   
     return all_info if len(all_info) else ['No Tip to give!']
+
+
+# ====================== NLP Functionalities ======================
+def preProcess(tweet):
+    #Converts a tweet to lowercase, replaces anyusername w/ <USERNAME> and URLS with <URL>
+    tweet = tweet.lower()
+    tweet = re.sub('@[a-zA-z0-9]*', '', tweet)              # <USERNAME>
+    tweet = re.sub('http[a-zA-z0-9./:]*', '', tweet)       # <URL>
+    tweet = re.sub('[.,-,!,",?]*', '', tweet)
+
+    # Utilize for instragram posts, remove hashtag for food-related posts
+    tweet = re.sub(r'#', '', tweet)
+    tweet = re.sub('&amp;', 'and', tweet)
+    #print(tweet)
+    return tweet

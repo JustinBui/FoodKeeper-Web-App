@@ -22,26 +22,28 @@ def get_surrounding_words(sentence, ents):
     
     for w in sentence.split():
         words.append(w)
-        
+
+           
     # Filtering out:
     # 1) Keywords from keyword_ that have NO synset, because we need words with synset in order to perform word similarity
     # 2) Keywords that are not actual entities detected (Because we want to extract keywords SURROUNDING the entities)
     words = [w for w in words if len(wordnet.synsets(w)) > 0 and w not in ents]
-
+    
     # Filtering stopwords
     stops = stopwords.words('english')
     words = [w for w in words if w not in stops]
     
     # Part of speech tagging (We want only nouns, and verbs - However this is bound to change)
-    prefered_pos = ['NN', 'NNS', 'VB', 'VBD', 'VBG', 'VBN',  'VBP', 'VBZ']
-    # prefered_pos = ['VB', 'VBD', 'VBG', 'VBN',  'VBP', 'VBZ']
+    # prefered_pos = ['NN', 'NNS', 'VB', 'VBD', 'VBG', 'VBN',  'VBP', 'VBZ']
+    
     tagged = nltk.pos_tag(words)
 
-    words = []
-    for word, pos in tagged:    
-        if pos in prefered_pos:
-            words.append(word)
+    # words = []
+    # for word, pos in tagged:
+    #     if pos in prefered_pos:
+    #         words.append(word)
     
+    print(words)
     return words # Array of words being returned
 
 def get_cooking_similarity(context_words: list):
